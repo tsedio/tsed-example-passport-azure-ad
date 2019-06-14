@@ -6,7 +6,7 @@ export class RestCtrl {
 
   @Get("/hello-world")
   @OAuthBearer()
-  helloWorl() {
+  helloWorld() {
     return "Hello world";
   }
 }

@@ -30,6 +30,7 @@
     "compression": "^1.7.1",
     "concurrently": "^4.1.0",
     "cookie-parser": "^1.4.3",
+    "dotenv": "^8.0.0",
     "express": "^4.17.1",
     "express-session": "^1.16.1",
     "method-override": "^3.0.0",

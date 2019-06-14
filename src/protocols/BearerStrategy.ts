@@ -9,46 +9,50 @@ export const OAuthBearerOptions = Symbol.for("OAuthBearerOptions");
 
 // Just to check if the authenticate is fired correctly
 class CustomBearerStrategy extends PassportBearerStrategy {
-  authenticate(req: Req, options?: object) {
-    console.log("====>", req, options);
-    console.log("====>", req.ctx.endpoint.get(OAuthBearerOptions));
-    return super.authenticate(req, options);
-  }
+    authenticate(req: Req, options?: object) {
+        console.log("====>", req, options);
+        console.log("====>", req.ctx.endpoint.get(OAuthBearerOptions));
+        return super.authenticate(req, options);
+    }
 }
 
 registerFactory({
-  provide: BearerStrategy,
-  deps: [AuthService, ServerSettingsService],
-  useFactory: (authService: AuthService, settings: ServerSettingsService) => {
-    const verify = async (req: Req, token: ITokenPayload, done: VerifyCallback) => {
-      // Verify is the right place to check given token and return userinfo
-      try {
-        console.log("====> endpoint", req.ctx.endpoint);
-        console.log("====> options", req.ctx.endpoint.get(OAuthBearerOptions));
-        const options = req.ctx.endpoint.get(OAuthBearerOptions); // retrieve options configured for the endpoint
+    provide: BearerStrategy,
+    deps: [AuthService, ServerSettingsService],
+    useFactory: (authService: AuthService, settings: ServerSettingsService) => {
+        const verify = async (req: Req, token: ITokenPayload, done: VerifyCallback) => {
+            // Verify is the right place to check given token and return userinfo
+            try {
+                console.log("====> endpoint", req.ctx.endpoint);
+                console.log("====> options", req.ctx.endpoint.get(OAuthBearerOptions));
+                const options = req.ctx.endpoint.get(OAuthBearerOptions); // retrieve options configured for the endpoint
 
-        // check precondition and authenticate user by his token and given options
-        const user = await authService.authenticate(token, options);
+                // check precondition and authenticate user by their token and given options
+                const user = await authService.authenticate(token, options)
+                    .catch(error => {
+                        return done(error);
+                    });
 
-        if (!user) {
-          authService.add(token);
-          return done(null, token);
-        }
+                if (!user) {
+                    authService.add(token);
+                    console.log("BearerStrategy - New user added automatically: ", token.oid);
+                    return done(null, token);
+                }
+                console.log("BearerStrategy - Found user: ", token.oid);
+                return done(null, user, token);
+            } catch (error) {
+                return done(error);
+            }
+        };
 
-        return done(null, user, token);
-      } catch (er) {
-        return done(er);
-      }
-    };
+        const strategy = new CustomBearerStrategy({
+            ...settings.get("azureBearerOptions"),
+            passReqToCallback: true  // !!!! IMPORTANT
+        }, verify);
 
-    const strategy = new CustomBearerStrategy({
-      ...settings.get("azureBearerOptions"),
-      passReqToCallback: true  // !!!! IMPORTANT
-    }, verify);
+        Passport.use(strategy);
 
-    Passport.use(strategy);
-
-    return strategy;
-  }
+        return strategy;
+    }
 });
 

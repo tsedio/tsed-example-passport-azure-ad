@@ -28,9 +28,34 @@ npm install
 npm start
 ```
 
+## Auth
+
+This implements the Azure Single Page App Auth. 
+
+Azure - set up the App as per:
+* https://docs.microsoft.com/en-us/azure/active-directory/develop/scenario-spa-app-registration
+
+Azure - create App Registration
+* `Azure > App Registrations > THE_APP > Expose an API` to create scopes (roles).  
+* Add it to the app under `Azure > App Registrations > THE_APP > API Permissions`
+
+Azure - set to use version 2 of token:
+* `Azure > App > App Active Directory > App Registrations > Manifest` - set accessTokenAcceptedVersion=2
+
+Roles - the scopes for an application need to be assigned to Users or Groups they belong to
+* https://docs.microsoft.com/en-us/azure/active-directory/manage-apps/methods-for-assigning-users-and-groups
+
+For TeD, users must be assigned to the 'ted.translations.search' scope.
+
+There is an Azure developer's blog post on all this at https://joonasw.net/view/defining-permissions-and-roles-in-aad.
+
+Copy the clientId that was created during the app registration process, and also the tennantId that is your organizations tennant.  Paste these in to a ~/.env file and as Azure Application Settings in your Application Service. 
+
+Copy the scope(s) created and add them to the configuration in `Server.ts`.
+
 ## Contributing
 
-You can make a PR directly on https://github.com/TypedProject/ts-express-decorators repository.
+You can make a PR directly on https://github.com/TypedProject/tsed-example-passport-azure-ad.
 
 ## Backers
 
