@@ -3,6 +3,7 @@ import "@tsed/swagger";
 import * as Session from "express-session";
 import * as CookieParser from "cookie-parser";
 import * as BodyParser from "body-parser";
+import * as cors from "cors";
 
 const compress = require("compression");
 const methodOverride = require("method-override");
@@ -62,6 +63,7 @@ export class Server extends ServerLoader {
     $onMountingMiddlewares(): void {
         this
             .use(GlobalAcceptMimesMiddleware)
+            .use(cors({origin: "*"}))
             .use(CookieParser())
             .use(compress({}))
             .use(methodOverride())

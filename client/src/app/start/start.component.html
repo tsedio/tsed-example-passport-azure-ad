@@ -1,0 +1,14 @@
+<div class="flex-container">
+    <div class="board flex-item">
+        <form [formGroup]="form" (ngSubmit)="save()">
+            <div class="line">
+                <label for="text-input">Input</label>
+                <input type="text" [formControl]="textInput" placeholder="" id="text-input" />
+            </div>
+            <div class="button">
+                <button type="submit" id="submit">Submit text</button>
+            </div>
+            <textarea [formControl]="output" rows="3" style="width:100%;"></textarea>
+        </form>
+    </div>
+</div>

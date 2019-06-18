@@ -1,30 +1,27 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": ".",
-    "outDir": "./dist",
-    "target": "es2016",
-    "lib": [
-      "es2016",
-      "dom"
-    ],
-    "typeRoots": [
-      "./node_modules/@types"
-    ],
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "types": ["reflect-metadata", "node", "mocha"],
+    "lib": [
+      "es2015",
+      "dom"
+    ],
     "allowSyntheticDefaultImports": true
   },
-  "include": [
-    "./src/**/*.ts"
-  ],
   "exclude": [
-    "node_modules",
-    "./public",
-    "dist",
-    "test"
+    "node_modules"
   ]
 }
