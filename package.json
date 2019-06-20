@@ -8,6 +8,7 @@
     "ng": "ng",
     "force": "azureToRebuild",
     "start:client": "ng serve --port 4201",
+    "start:client:dev": "ng serve --port 4201 --configuration=dev",
     "build:client": "ng build",
     "test:client": "ng test",
     "lint:client": "ng lint",

@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  clientId: "Insert here from Azure App Registration",
+  tenantId: "Insert here from Azure"
 };
 
 /*

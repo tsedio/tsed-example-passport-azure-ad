@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {UserAgentApplication} from 'msal';
+import {Component, OnInit} from "@angular/core";
+import {UserAgentApplication} from "msal";
+import {environment} from "../../environments/environment";
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss']
+    selector: "app-login",
+    templateUrl: "./login.component.html",
+    styleUrls: ["./login.component.scss"]
 })
 export class LoginComponent implements OnInit {
     ngOnInit() {
@@ -13,7 +14,7 @@ export class LoginComponent implements OnInit {
         new UserAgentApplication(
             {
                 auth: {
-                    clientId: "<insert client id from Azure App Registration>"
+                    clientId: environment.clientId
                 }
             });
     }

@@ -56,6 +56,30 @@
                   "maximumError": "5mb"
                 }
               ]
+            },
+            "dev": {
+              "fileReplacements": [
+                {
+                  "replace": "client/src/environments/environment.ts",
+                  "with": "client/src/environments/environment.dev.ts"
+                }
+              ],
+              "optimization": false,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
             }
           }
         },
@@ -67,6 +91,9 @@
           "configurations": {
             "production": {
               "browserTarget": "ted:build:production"
+            },
+            "dev": {
+              "browserTarget": "ted:build:dev"
             }
           }
         },

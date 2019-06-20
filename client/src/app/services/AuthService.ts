@@ -3,6 +3,7 @@ import {Logger, LogLevel, UserAgentApplication} from "msal";
 import {ToasterService} from "angular2-toaster";
 import {HttpClient} from "@angular/common/http";
 import {AuthenticationParameters} from "msal/src/AuthenticationParameters";
+import {environment} from "../../environments/environment"
 
 const Uri = "http://localhost:4201";
 
@@ -24,7 +25,9 @@ const Uri = "http://localhost:4201";
 export class AuthService {
     private msal = null;
     idToken;
-    clientId = "<insert client id from Azure App Registration>"
+    // concenus is that it is safe to expose these
+    clientId = environment.clientId;
+    tenantId = environment.tenantId;
 
     constructor(private toast: ToasterService, private http: HttpClient) {
     }
@@ -44,6 +47,7 @@ export class AuthService {
                 loggerCallback,
                 {correlationId: "1234", level: LogLevel.Info, piiLoggingEnabled: true});
 
+            //
             this.msal = new UserAgentApplication(
                 {
                     auth: {
