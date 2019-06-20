@@ -6,6 +6,7 @@ import {OAuthBearerOptions} from "../protocols/BearerStrategy";
 
 export function OAuthBearer(options: any = {}): Function {
   const authFn = (req: any, res: any, next: any) => {
+    console.log(`authFn  - options: ${JSON.stringify(options)}`)
     return Passport.authenticate("oauth-bearer", {session: false, ...options})(req, res, next);
   };
   return applyDecorators(

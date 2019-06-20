@@ -9,4 +9,10 @@ export class HelloWorldCtrl {
     helloWorld() {
         return {text: "Hello world"};
     }
+
+    @Get("/hello-auth")
+    @OAuthBearer({"scopes": ["testerx"]})
+    helloAuth() {
+        return {text: "Authorised hello"};
+    }
 }

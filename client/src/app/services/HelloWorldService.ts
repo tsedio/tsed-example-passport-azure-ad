@@ -5,6 +5,7 @@ import {AuthService} from "./AuthService";
 
 const SERVER_URL = "http://localhost:8070";
 const HELLO = "/rest/hello-world";
+const AUTH = "/rest/hello-auth";
 
 @Injectable()
 export class HelloWorldService {
@@ -26,11 +27,6 @@ export class HelloWorldService {
         };
     }
 
-    /**
-     * Return the human translate for the given data if any.
-     * @param data of form - {language: eg. vi, english: english text to lookup an existing human translate for}
-     * @return [error, value] where they are mutually exclusive.  Check for any error first.
-     */
     async helloWorld(): Promise<any> {
         return new Promise<any>(async (resolve, reject) => {
 
@@ -39,6 +35,19 @@ export class HelloWorldService {
                     return resolve(value);
                 }, (error) => {
                     this.handleError(error, "helloWorld");
+                    reject(error);
+                });
+        });
+    }
+
+    async helloAuth(): Promise<any> {
+        return new Promise<any>(async (resolve, reject) => {
+
+            await this.http.get<any>(SERVER_URL + AUTH, await this.httpOptions() as object)
+                .subscribe((value: any) => {
+                    return resolve(value);
+                }, (error) => {
+                    this.handleError(error, "helloAuth");
                     reject(error);
                 });
         });

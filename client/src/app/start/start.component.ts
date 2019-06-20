@@ -15,10 +15,12 @@ import {HelloWorldService} from "../services/HelloWorldService";
 export class StartComponent implements OnInit {
 
     textInput = new FormControl("");
-    output = new FormControl("")
+    output = new FormControl("");
+    authButton = new FormControl("");
     form = new FormGroup({
         textInput: this.textInput,
-        output: this.output
+        output: this.output,
+        authButton: this.authButton
     });
 
     constructor(private http: HttpClient, protected spinnerService: Ng4LoadingSpinnerService, private toast: ToasterService,
@@ -26,6 +28,10 @@ export class StartComponent implements OnInit {
     }
 
     async ngOnInit() {
+        // this.authButton. registerOnChange((change) => {
+        //     console.log(`auth button pressed`);
+        //     this.authCall();
+        // });
         await this.signin();
     }
 
@@ -37,6 +43,13 @@ export class StartComponent implements OnInit {
     async save() {
         const hello = await this.helloWorldService.helloWorld();
         console.log(`save - from server: ${hello}`);
-        this.output.setValue(JSON.stringify(hello))
+        this.output.setValue(JSON.stringify(hello));
+    }
+
+    async authCall(event) {
+        const hello = await this.helloWorldService.helloAuth();
+        console.log(`helloAuth - from server: ${hello}`);
+        this.output.setValue(JSON.stringify(hello));
+        // event.stopPropagation()
     }
 }

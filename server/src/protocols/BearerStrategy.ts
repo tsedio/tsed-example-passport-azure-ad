@@ -38,7 +38,7 @@ registerFactory({
                     console.log("BearerStrategy - New user added automatically: ", token.oid);
                     return done(null, token);
                 }
-                console.log("BearerStrategy - Found user: ", token.oid);
+                console.log("BearerStrategy - Found user: ", JSON.stringify(token));
                 return done(null, user, token);
             } catch (error) {
                 return done(error);

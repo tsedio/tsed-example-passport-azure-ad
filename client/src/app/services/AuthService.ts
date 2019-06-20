@@ -48,7 +48,7 @@ export class AuthService {
                 {
                     auth: {
                         clientId: this.clientId,
-                        authority: "https://login.microsoftonline.com/organizations",    //
+                        authority: `https://login.microsoftonline.com/${this.tenantId}`,
                         redirectUri: Uri + "/login",
                     },
                     cache: {
@@ -96,7 +96,7 @@ export class AuthService {
             }
             // return resolve(this.idToken);
             // TODO CHANGE THIS TO SOMETHING ELSE BEFORE COMMITTING
-            const scopes: AuthenticationParameters = {scopes: ["api://translationeditor-test/ted.translations.search"]};
+            const scopes: AuthenticationParameters = {scopes: ["api://translationeditor-test/ted.translations.search", "api://translationeditor-test/tester"]};
             console.log(`Auth - Sign in with scopes: ${JSON.stringify(scopes)}`);
             return this.msal.acquireTokenSilent(scopes)
                 .then(authResponse => {
