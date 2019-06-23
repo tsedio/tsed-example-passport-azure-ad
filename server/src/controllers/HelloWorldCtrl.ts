@@ -14,7 +14,7 @@ export class HelloWorldCtrl {
     // }
 
     @Get("/hello-world")
-    @OAuthBearer({"scopes": ["app.special.perms"]})
+    @OAuthBearer({"scopes": ["tester"]})
     helloWorld(@Req() request: Express.Request, @Res() response: Express.Response) {
         const scopes = request.ctx.endpoint.get(OAuthBearerOptions);
         console.log(`helloWorld - request method: ${request.method}`);

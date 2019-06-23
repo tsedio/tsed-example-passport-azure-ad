@@ -85,7 +85,6 @@ export class AuthService {
                     const msg = `error from loginPopup: ${error}`;
                     console.error(msg);
                     this.toast.pop("error", "sign in", msg);
-                    // throw error;
                     return reject(error);
                 });
         });
@@ -100,7 +99,7 @@ export class AuthService {
             }
             // return resolve(this.idToken);
             // TODO CHANGE THIS TO SOMETHING ELSE BEFORE COMMITTING
-            const allScopes: AuthenticationParameters = {scopes: ["api://translationeditor-test/ted.translations.search", "api://translationeditor-test/tester", ...scopes]};
+            const allScopes: AuthenticationParameters = {scopes: ["api://translationeditor-test/ted.translations.search", ...scopes]}; // , "api://translationeditor-test/tester", ...scopes]};
             console.log(`Auth - Sign in with scopes: ${JSON.stringify(allScopes)}`);
             return this.msal.acquireTokenSilent(allScopes)
                 .then(authResponse => {
@@ -122,7 +121,10 @@ export class AuthService {
                             return resolve(token);
                         })
                         .catch(err => {
-                            return reject(new Error(`Error - something weird going on: ${err}`));
+                            const msg = `error from acquireTokenPopup: ${err}`;
+                            console.error(msg);
+                            this.toast.pop("error", "Acquire API Token", msg);
+                            return reject(error);
                         });
                 });
         });
