@@ -91,7 +91,7 @@ export class AuthService {
         });
     }
 
-    async retrieveToken(): Promise<string> {
+    async retrieveToken(scopes: string[] = []): Promise<string> {
         return new Promise(async (resolve, reject) => {
 
             // if the user is already logged in you can acquire a token, if not log them in first
@@ -100,9 +100,9 @@ export class AuthService {
             }
             // return resolve(this.idToken);
             // TODO CHANGE THIS TO SOMETHING ELSE BEFORE COMMITTING
-            const scopes: AuthenticationParameters = {scopes: ["api://translationeditor-test/ted.translations.search", "api://translationeditor-test/tester"]};
-            console.log(`Auth - Sign in with scopes: ${JSON.stringify(scopes)}`);
-            return this.msal.acquireTokenSilent(scopes)
+            const allScopes: AuthenticationParameters = {scopes: ["api://translationeditor-test/ted.translations.search", "api://translationeditor-test/tester", ...scopes]};
+            console.log(`Auth - Sign in with scopes: ${JSON.stringify(allScopes)}`);
+            return this.msal.acquireTokenSilent(allScopes)
                 .then(authResponse => {
                     const token = authResponse.accessToken;
                     console.log(`acquireTokenSilent- accessToken: ${token}`);
@@ -115,7 +115,7 @@ export class AuthService {
                 })
                 .catch(error => {
                     console.error(`Caught acquireTokenSilent error: ${error}`);
-                    return this.msal.acquireTokenPopup(scopes)
+                    return this.msal.acquireTokenPopup(allScopes)
                         .then(authResponse => {
                             const token = authResponse.accessToken;
                             console.log(`acquireTokenPopup- accessToken: ${token}`);

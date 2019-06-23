@@ -1,7 +1,7 @@
 import {Service} from "@tsed/di";
 import {ITokenPayload, VerifyCallback} from "passport-azure-ad";
 import {User} from "../models/User";
-import {Req} from "@tsed/common";
+import {Logger, LogLevel, UserAgentApplication} from "msal";
 
 require("dotenv").config();
 
@@ -19,7 +19,7 @@ export class AuthService {
         return process.env.clientId;
     }
 
-    static getTennanttId(): string {
+    static getTenantId(): string {
         return process.env.tenantId;
     }
 
@@ -28,8 +28,8 @@ export class AuthService {
         this.owner = token.oid;
     }
 
-    async authenticate(token: ITokenPayload, options: any): Promise<User> {
-        if (token.tid !== AuthService.getTennanttId()) {
+    async verify(token: ITokenPayload, options: any): Promise<User> {
+        if (token.tid !== AuthService.getTenantId()) {
             throw Error("TenantId is not the same");
         }
         if (token.aud !== AuthService.getClientId()) {

@@ -20,7 +20,7 @@ const clientId = process.env.clientId;
 const tenantId = process.env.tenantId;
 
 // Application specific scopes
-const scopes = ["ted.translations.search"];
+const scopes = ["ted.translations.search", "tester"];
 
 @ServerSettings({
     rootDir,
@@ -29,7 +29,7 @@ const scopes = ["ted.translations.search"];
     httpsPort: process.env.HTTPSPORT || "8001",
     logger: {
         debug: false,
-        logRequest: true,
+        logRequest: false,
         requestFields: ["reqId", "method", "url", "headers", "query", "params", "duration"]
     },
     componentsScan: [

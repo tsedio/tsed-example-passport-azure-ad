@@ -25,7 +25,8 @@
     "tsc": "tsc --project tsconfig.json",
     "tsc:w": "tsc --project tsconfig.json -w",
     "start:dev": "nodemon --watch 'server/src/**/*.ts' --ignore 'node_modules/**/*' --exec ts-node src/index.ts",
-    "start": "ts-node server/src/index.ts"
+    "start": "ts-node server/src/index.ts",
+    "start:server:watch": "nodemon --watch server/src --exec ts-node server/src/index.ts"
   },
   "author": "",
   "license": "MIT",

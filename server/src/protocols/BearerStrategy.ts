@@ -10,8 +10,8 @@ export const OAuthBearerOptions = Symbol.for("OAuthBearerOptions");
 // Just to check if the authenticate is fired correctly
 class CustomBearerStrategy extends PassportBearerStrategy {
     authenticate(req: Req, options?: object) {
-        console.log("====>", req, options);
-        console.log("====>", req.ctx.endpoint.get(OAuthBearerOptions));
+        // console.log("====>", req, options);
+        console.log("====> OAuthBearerOptions: ", req.ctx.endpoint.get(OAuthBearerOptions));
         return super.authenticate(req, options);
     }
 }
@@ -23,12 +23,12 @@ registerFactory({
         const verify = async (req: Req, token: ITokenPayload, done: VerifyCallback) => {
             // Verify is the right place to check given token and return userinfo
             try {
-                console.log("====> endpoint", req.ctx.endpoint);
-                console.log("====> options", req.ctx.endpoint.get(OAuthBearerOptions));
+                // console.log("====> endpoint", req.ctx.endpoint);
                 const options = req.ctx.endpoint.get(OAuthBearerOptions); // retrieve options configured for the endpoint
+                console.log("====> options", options);
 
                 // check precondition and authenticate user by their token and given options
-                const user = await authService.authenticate(token, options)
+                const user = await authService.verify(token, options)
                     .catch(error => {
                         return done(error);
                     });
