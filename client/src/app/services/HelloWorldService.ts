@@ -2,10 +2,10 @@ import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {ToasterService} from "angular2-toaster";
 import {AuthService} from "./AuthService";
-import {mergeMap, flatMap, map, catchError, tap} from "rxjs/operators";
-import {Observable, merge, of} from "rxjs";
+import {flatMap, map} from "rxjs/operators";
 
 const SERVER_URL = "http://localhost:8070";
+// const HELLO = "/rest/hello-no-world";
 const HELLO = "/rest/hello-world";
 const AUTH = "/rest/hello-auth";
 const HEAD_AUTH = "/rest/hello-head-auth";
@@ -51,7 +51,7 @@ export class HelloWorldService {
                         const scopesIn = response.headers.get("scopes");
                         const scopes = typeof scopesIn === "string" ? JSON.parse(scopesIn) : scopesIn;
                         console.log(`  mscopes: ${JSON.stringify(scopes)}`);
-                        return scopes.scopes;
+                        return scopes ? scopes.scopes : [];
                     }),
                     flatMap(async requestScopes => {
                         const scopes = requestScopes.map(ADD_SCOPE_BASE);

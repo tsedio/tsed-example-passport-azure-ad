@@ -97,16 +97,14 @@ export class AuthService {
             if (!this.msal && !this.msal.getAccount()) {
                 await this.signIn();
             }
-            // return resolve(this.idToken);
-            // TODO CHANGE THIS TO SOMETHING ELSE BEFORE COMMITTING
-            const allScopes: AuthenticationParameters = {scopes: ["api://translationeditor-test/ted.translations.search", ...scopes]}; // , "api://translationeditor-test/tester", ...scopes]};
+            const allScopes: AuthenticationParameters = {scopes: ["user.read", ...scopes]}; // , "api://translationeditor-test/tester", ...scopes]};
             console.log(`Auth - Sign in with scopes: ${JSON.stringify(allScopes)}`);
             return this.msal.acquireTokenSilent(allScopes)
                 .then(authResponse => {
                     const token = authResponse.accessToken;
                     console.log(`acquireTokenSilent- accessToken: ${token}`);
                     if (this.tokenIsExpired(authResponse.expiresOn)) {
-                        // I don't know why this happens and
+                        // I don't know why this happens but force the full login to happen again
                         this.msal = null;
                         return this.retrieveToken();
                     }

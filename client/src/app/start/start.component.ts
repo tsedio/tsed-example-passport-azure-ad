@@ -47,7 +47,7 @@ export class StartComponent implements OnInit {
     }
 
     async authCall(event) {
-        const hello = await this.helloWorldService.helloAuth();
+        const hello = await this.helloWorldService.helloWorld();
         console.log(`helloAuth - from server: ${hello}`);
         this.output.setValue(JSON.stringify(hello));
         // event.stopPropagation()
