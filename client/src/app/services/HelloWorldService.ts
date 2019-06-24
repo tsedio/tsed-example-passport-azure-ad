@@ -32,14 +32,18 @@ export class HelloWorldService {
         if (!SERVER_URL) {
             throw new Error(`httpOptions - server is not defined`);
         }
+        const headers = {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": SERVER_URL,
+            // Authorization: "Bearer " + bearer,
+        };
         console.log(`httpOptions - given scopes: ${JSON.stringify(options.scopes)}`);
-        const bearer = await this.authService.retrieveToken(options.scopes);
+        if (options.scopes && options.scopes.length > 0) {
+            const bearer = await this.authService.retrieveToken(options.scopes);
+            headers["Authorization"] = "Bearer " + bearer;
+        }
         return {
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": SERVER_URL,
-                Authorization: "Bearer " + bearer,
-            })
+            headers: new HttpHeaders(headers)
         };
     }
 
