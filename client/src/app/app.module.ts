@@ -9,9 +9,10 @@ import {ToasterModule} from "angular2-toaster";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {RouterModule, Routes} from "@angular/router";
 
-import {AuthService} from "./services/AuthService";
+import {AuthService} from "./services/core/azureAd/AuthService";
 import {LoginComponent} from "./login/login.component";
 import {HelloWorldService} from "./services/HelloWorldService";
+import {HttpClientService} from "./services/core/azureAd/HttpClientService";
 
 const appRoutes: Routes = [
     {path: "login", component: LoginComponent},
@@ -37,7 +38,7 @@ const appRoutes: Routes = [
             {enableTracing: false} // <-- debugging purposes only
         )
     ],
-    providers: [AuthService, HelloWorldService],
+    providers: [AuthService, HelloWorldService, HttpClientService],
     bootstrap: [AppComponent]
 })
 export class AppModule {

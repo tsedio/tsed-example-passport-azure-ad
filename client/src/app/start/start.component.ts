@@ -4,7 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {Ng4LoadingSpinnerService} from "ng4-loading-spinner";
 import {ToasterService} from "angular2-toaster";
 
-import {AuthService} from "../services/AuthService";
+import {AuthService} from "../services/core/azureAd/AuthService";
 import {HelloWorldService} from "../services/HelloWorldService";
 
 @Component({

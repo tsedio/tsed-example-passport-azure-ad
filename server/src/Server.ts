@@ -20,7 +20,7 @@ const clientId = process.env.clientId;
 const tenantId = process.env.tenantId;
 
 // Application specific scopes
-const scopes = ["ted.translations.search", "tester"];
+const scopes = ["ted.application", "ted.translations.search", "tester"];
 
 @ServerSettings({
     rootDir,

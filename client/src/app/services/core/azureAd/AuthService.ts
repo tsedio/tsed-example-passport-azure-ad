@@ -3,9 +3,9 @@ import {Logger, LogLevel, UserAgentApplication} from "msal";
 import {ToasterService} from "angular2-toaster";
 import {HttpClient} from "@angular/common/http";
 import {AuthenticationParameters} from "msal/src/AuthenticationParameters";
-import {environment} from "../../environments/environment";
+import {environment} from "../../../../environments/environment";
 
-const Uri = "http://localhost:4201";
+const Uri = window.location.href;
 
 /**
  * Azure Auth using Microsoft Auth Login
@@ -20,16 +20,22 @@ const Uri = "http://localhost:4201";
  *
  * Auth information for your tennant can be found at
  * https://login.microsoftonline.com/<tenant>/v2.0/.well-known/openid-configuration
+ *
+ * ---------
+ * NOTE: Scopes used in entirety must be defined in server/src/Server.ts > scopes constant
  */
 @Injectable()
 export class AuthService {
     private msal = null;
     idToken;
-    // concenus is that it is safe to expose these
     clientId = environment.clientId;
     tenantId = environment.tenantId;
+    applicationExecScope = environment.ApplicationExecScope;
 
-    constructor(private toast: ToasterService, private http: HttpClient) {
+    constructor(private toast: ToasterService) {
+        if (!this.applicationExecScope) {
+            throw new Error(`Expecting environment.ApplicationExecScope to be set`);
+        }
     }
 
     private async setup(): Promise<void> {
@@ -47,13 +53,15 @@ export class AuthService {
                 loggerCallback,
                 {correlationId: "1234", level: LogLevel.Info, piiLoggingEnabled: true});
 
-            //
+            const redirectUri = "" + Uri + (Uri.substring(Uri.length - 1, Uri.length) === "/" ? "login" : "/login");
+
+            console.log(`redirectUri : ${Uri}, ${redirectUri}, ${Uri.substring(Uri.length - 1, Uri.length)}`);
             this.msal = new UserAgentApplication(
                 {
                     auth: {
                         clientId: this.clientId,
                         authority: `https://login.microsoftonline.com/${this.tenantId}`,
-                        redirectUri: Uri + "/login",
+                        redirectUri
                     },
                     cache: {
                         cacheLocation: "localStorage",
@@ -70,6 +78,10 @@ export class AuthService {
         });
     }
 
+    /**
+     * Initial sign in to Azure AD.  It returns a tokenId that is used (internally in msal.js though I maintain a copy)
+     * to create the subsequent authTokens.
+     */
     async signIn() {
         return new Promise(async (resolve, reject) => {
             if (!this.msal) {
@@ -90,6 +102,11 @@ export class AuthService {
         });
     }
 
+    /**
+     * Retrieve an authToken to be used to pass to the backend API and verified using passport-azure-ad.
+     *
+     * @param scopes to apply.  At least one is needed.
+     */
     async retrieveToken(scopes: string[] = []): Promise<string> {
         return new Promise(async (resolve, reject) => {
 
@@ -127,6 +144,19 @@ export class AuthService {
                         });
                 });
         });
+    }
+
+    /**
+     * We seem to require at least one scope to get an AuthToken.  And the best I can work out is it needs to be
+     * defined per application - Azure > App Registrations > app_one > Expose API, API Permissions
+     *
+     * @param scope is any existing, and in which case we just return this instead of the 'default'
+     */
+    getScopesOrDefault(scope: string[]): string[] {
+        if (!scope || scope.length === 0) {
+            return [this.applicationExecScope];
+        }
+        return scope;
     }
 
     private tokenIsExpired(expiresOn: string): boolean {

@@ -30,7 +30,7 @@ npm start
 
 ## Auth
 
-This implements the Azure Single Page App Auth. 
+This implements the Azure Single Page App Auth.   
 
 Azure - set up the App as per:
 * https://docs.microsoft.com/en-us/azure/active-directory/develop/scenario-spa-app-registration
@@ -52,6 +52,11 @@ There is an Azure developer's blog post on all this at https://joonasw.net/view/
 Copy the clientId that was created during the app registration process, and also the tennantId that is your organizations tennant.  Paste these in to a ~/.env file and as Azure Application Settings in your Application Service. 
 
 Copy the scope(s) created and add them to the configuration in `Server.ts`.
+
+Define some environment settings for the Angular client in the src/environments files - passing `-configuration=<env>` to startup:
+
+    ng serve --port 4201 --configuration=dev
+
 
 ## Contributing
 
