@@ -30,7 +30,26 @@ npm start
 
 ## Auth
 
-This implements the Azure Single Page App Auth.   
+This implements the Azure Single Page App Auth.  The options are set in the:
+ * `.env` file for the server in development environment:
+ * Azure Application Settings for the server in the Azure environment
+ * `environments/environment.*.ts` for the Angular client in the chosen environment
+   * To start Angular in the chosen environment run `ng serve --port 4201 --configuration=dev` for `environment.dev.ts`
+
+The options are:
+1.  `UseScopeLevelAuth=true` - to enable (true) the use of scopes specified on the endpoints.  For example:
+
+         @Get("/hello-auth-world")
+         @OAuthBearer({"scopes": ["admin"]})
+         importantAdminTask(@Req() request: Express.Request, @Res() response: Express.Response) {
+             ...
+         }
+
+However this comes at the cost of needing to define an application scope and assigning users to that.  This is due to the way that Azure Active Directory currently works where at least one scope is required (that is, if there are endpoints that don't have explicit scopes then something needs to be sent to Azure AD for these).
+
+If this option is true then the full set of possible scopes needs to be defined in `Scopes` in the server environment.  The first one should be the application one that all users need to be assigned to.
+
+2. `UseScopeLevelAuth=false` - to disable (false) the use of scopes specified on the endpoints.  This means that the users only need to authenticate against an App registered in Azure AD.  But no API Endpoints need to be defined.
 
 Azure - set up the App as per:
 * https://docs.microsoft.com/en-us/azure/active-directory/develop/scenario-spa-app-registration
@@ -52,11 +71,6 @@ There is an Azure developer's blog post on all this at https://joonasw.net/view/
 Copy the clientId that was created during the app registration process, and also the tennantId that is your organizations tennant.  Paste these in to a ~/.env file and as Azure Application Settings in your Application Service. 
 
 Copy the scope(s) created and add them to the configuration in `Server.ts`.
-
-Define some environment settings for the Angular client in the src/environments files - passing `-configuration=<env>` to startup:
-
-    ng serve --port 4201 --configuration=dev
-
 
 ## Contributing
 
