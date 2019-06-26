@@ -41,14 +41,14 @@ export class StartComponent implements OnInit {
     }
 
     async save() {
-        const hello = await this.helloWorldService.helloWorld();
-        console.log(`save - from server: ${hello}`);
+        const hello = await this.helloWorldService.helloAuthWorld();
+        console.log(`helloAuth - from server: ${hello}`);
         this.output.setValue(JSON.stringify(hello));
     }
 
     async authCall(event) {
-        const hello = await this.helloWorldService.helloWorld();
-        console.log(`helloAuth - from server: ${hello}`);
+        const hello = await this.helloWorldService.helloNoAuthWorld();
+        console.log(`helloNoAuth - from server: ${hello}`);
         this.output.setValue(JSON.stringify(hello));
         // event.stopPropagation()
     }

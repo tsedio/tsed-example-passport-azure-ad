@@ -6,10 +6,8 @@ import {flatMap, map} from "rxjs/operators";
 import {HttpClientService} from "./core/azureAd/HttpClientService";
 
 const SERVER_URL = "http://localhost:8070";
-// const HELLO = "/rest/hello-no-world";
-const HELLO = "/rest/hello-world";
-const AUTH = "/rest/hello-auth";
-const HEAD_AUTH = "/rest/hello-head-auth";
+const HELLO_AUTH = "/rest/hello-auth-world";
+const HELLO_NO_AUTH = "/rest/hello-no-auth-world";
 
 const SCOPE_BASE = "api://translationeditor-test";
 
@@ -31,28 +29,9 @@ export class HelloWorldService {
         httpClientService.setServer(SERVER_URL);
     }
 
-    // async httpOptions(options: HttpOptions = {scopes: []}): Promise<any> {
-    //     if (!SERVER_URL) {
-    //         throw new Error(`httpOptions - server is not defined`);
-    //     }
-    //     const headers = {
-    //         "Content-Type": "application/json",
-    //         "Access-Control-Allow-Origin": SERVER_URL,
-    //         Authorization: "Bearer " + bearer,
-    // };
-    // console.log(`httpOptions - given scopes: ${JSON.stringify(options.scopes)}`);
-    // if (options.scopes && options.scopes.length > 0) {
-    //     const bearer = await this.authService.retrieveToken(options.scopes);
-    //     headers["Authorization"] = "Bearer " + bearer;
-    // }
-    // return {
-    //     headers: new HttpHeaders(headers)
-    // };
-    // }
-
-    async helloWorld(): Promise<any> {
+    async helloAuthWorld(): Promise<any> {
         return new Promise<any>(async (resolve, reject) => {
-            this.httpClientService.get(SERVER_URL + HELLO, {scopesApplied: true})
+            this.httpClientService.get(SERVER_URL + HELLO_AUTH, {scopesApplied: true})
                 .subscribe((value: any) => {
                     console.log(`SERVER_URL + HELLO get: ${JSON.stringify(value)}`);
                     return resolve(value);
@@ -60,32 +39,19 @@ export class HelloWorldService {
                     this.handleError(error, "helloWorld");
                     reject(error);
                 });
-            // let scopes = undefined;
-            // this.http.head<any>(SERVER_URL + HELLO, {observe: "response", ...await this.httpOptions() as object})
-            //     .pipe(map(response => {
-            //             const scopesIn = response.headers.get("scopes");
-            //             const scopes = typeof scopesIn === "string" ? JSON.parse(scopesIn) : scopesIn;
-            //             console.log(`  mscopes: ${JSON.stringify(scopes)}`);
-            //             return scopes ? scopes.scopes : [];
-            //         }),
-            //         flatMap(async requestScopes => {
-            //             const scopes = requestScopes.map(ADD_SCOPE_BASE);
-            //             console.log(`  helloWorld observabale - scopes: ${JSON.stringify(scopes)}`);
-            //             return this.http.get(SERVER_URL + HELLO, {...await this.httpOptions({scopes}) as object});
-            //         }),
-            //         flatMap(response => {
-            //             console.log(`flatMap response: ${JSON.stringify(response)}, keys: ${Object.keys(response)}`);
-            //             return response;
-            //         })
-            //         , tap(value => console.log(`tap shows: ${JSON.stringify(value)}`))
-            // )
-            // .subscribe((value: any) => {
-            //     console.log(`SERVER_URL + HELLO get: ${JSON.stringify(value)}`);
-            //     return resolve(value);
-            // }, (error) => {
-            //     this.handleError(error, "helloWorld");
-            //     reject(error);
-            // });
+        });
+    }
+
+    async helloNoAuthWorld(): Promise<any> {
+        return new Promise<any>(async (resolve, reject) => {
+            this.httpClientService.get(SERVER_URL + HELLO_NO_AUTH, {scopesApplied: true})
+                .subscribe((value: any) => {
+                    console.log(`SERVER_URL + HELLO get: ${JSON.stringify(value)}`);
+                    return resolve(value);
+                }, (error) => {
+                    this.handleError(error, "helloWorld");
+                    reject(error);
+                });
         });
     }
 
