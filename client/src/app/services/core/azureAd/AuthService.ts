@@ -114,6 +114,9 @@ export class AuthService {
             if (!this.msal && !this.msal.getAccount()) {
                 await this.signIn();
             }
+            if (! environment.UseScopeLevelAuth) {
+                resolve(this.idToken);
+            }
             // const allScopes: AuthenticationParameters = {scopes: ""};   // "https://graph.microsoft.com/Calendar.Read", ...scopes]}; // , "api://translationeditor-test/tester", ...scopes]};
             const allScopes: AuthenticationParameters = {scopes: scopes};
             console.log(`Auth - Sign in with scopes: ${JSON.stringify(allScopes)}`);

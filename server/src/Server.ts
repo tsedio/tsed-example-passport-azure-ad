@@ -19,8 +19,9 @@ const level: levelType = "info";
 const clientId = process.env.clientId;
 const tenantId = process.env.tenantId;
 
-// Application specific scopes
-const scopes = ["ted.application", "ted.translations.search", "tester"];
+// Application specific scopes.  Define in .env file if to use scopes and what the scopes are
+const scopes = process.env.UseScopeLevelAuth === "true" ? process.env.Scopes.split(",") : null;
+console.log(`Scopes to use: ${scopes}`)
 
 @ServerSettings({
     rootDir,

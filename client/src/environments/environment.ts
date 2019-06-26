@@ -7,9 +7,15 @@ export const environment = {
   // Azure AD
   clientId: "Insert here from Azure App Registration",
   tenantId: "Insert here from Azure",
-  AzureIdentifierUri: "Insert here from Azure App Registration", // App Registrations > Manifest
-  ApplicationExecScope: "Insert here from Azure App Registration"// App Registrations > Expose API, API Permissions.
-                                                                 // Required as Azure seems to need at least one scope.
+  // Choose if to use simple auth or require endpoint-specific auth.  Also need to set this in the environment for
+  // the server.  .env file locally and in Azure Application Settings.  Defaults to false.
+  UseScopeLevelAuth: false,
+  // If using endpoint-specific auth then all users will need to have the following Scope.
+  // App Registrations > Expose API, API Permissions. Required as Azure seems to need at least one scope.
+  ApplicationExecScope: "Insert here from Azure App Registration",
+  // And need to define AzureIdentifierUri to form the fully qualified Scope name.
+  // App Registrations > Manifest
+  AzureIdentifierUri: "Insert here from Azure App Registration",
 };
 
 /*
