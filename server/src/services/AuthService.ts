@@ -36,6 +36,11 @@ export class AuthService {
             if (token.aud !== AuthService.getClientId()) {
                 throw Error("ClientId is not the same");
             }
+            console.log(`verify - options: ${JSON.stringify(options)}, UseScopeLevelAuth: ${process.env.UseScopeLevelAuth}`);
+            if (options && !options.scopes) {
+                // This is the case when on the endpoint is "@OAuthBearer()" ie. no scope
+                return resolve(token);
+            }
             if (!(options && options.scopes && options.scopes.length > 0 && this.tokenInGivenOrApplicationScope(token.scp, options.scopes))) {
                 const epScope = options && options.scopes && options.scopes.length > 0 ? options.scopes[0] : "null";
                 const msg = `Scopes on endpoint: ${epScope} not same as in token: ${token.scp}`;
@@ -60,6 +65,6 @@ export class AuthService {
         let allScopes = endpointScopes.slice();
         allScopes.push(this.scopes[0]);
 
-        return ! tokensScope || allScopes.find(t => t === tokensScope) !== undefined;
+        return !tokensScope || allScopes.find(t => t === tokensScope) !== undefined;
     }
 }

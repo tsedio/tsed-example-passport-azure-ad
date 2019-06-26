@@ -16,11 +16,15 @@ export class StartComponent implements OnInit {
 
     textInput = new FormControl("");
     output = new FormControl("");
-    authButton = new FormControl("");
+    authButtonWithScopes = new FormControl("");
+    authButtonNoScopes = new FormControl("");
+    noAuthButton = new FormControl("");
     form = new FormGroup({
         textInput: this.textInput,
         output: this.output,
-        authButton: this.authButton
+        authButtonWithScopes: this.authButtonWithScopes,
+        authButtonNoScopes: this.authButtonNoScopes,
+        noAuthButton: this.noAuthButton
     });
 
     constructor(private http: HttpClient, protected spinnerService: Ng4LoadingSpinnerService, private toast: ToasterService,
@@ -40,16 +44,23 @@ export class StartComponent implements OnInit {
         await this.authService.signIn();
     }
 
-    async save() {
-        const hello = await this.helloWorldService.helloAuthWorld();
-        console.log(`helloAuth - from server: ${hello}`);
-        this.output.setValue(JSON.stringify(hello));
-    }
-
     async authCall(event) {
-        const hello = await this.helloWorldService.helloNoAuthWorld();
+        const hello = await this.helloWorldService.helloAuthWorld();
         console.log(`helloNoAuth - from server: ${hello}`);
         this.output.setValue(JSON.stringify(hello));
         // event.stopPropagation()
+    }
+
+    async authCallNoScope(event) {
+        const hello = await this.helloWorldService.helloAuthWorldNoScope();
+        console.log(`helloNoAuth - from server: ${hello}`);
+        this.output.setValue(JSON.stringify(hello));
+        // event.stopPropagation()
+    }
+
+    async noAuthCall() {
+        const hello = await this.helloWorldService.helloNoAuthWorld();
+        console.log(`helloAuth - from server: ${hello}`);
+        this.output.setValue(JSON.stringify(hello));
     }
 }

@@ -8,13 +8,20 @@ export class HelloWorldCtrl {
 
     @Get("/hello-auth-world")
     @OAuthBearer({"scopes": ["tester"]})
-    helloXWorld(@Req() request: Express.Request, @Res() response: Express.Response) {
+    helloAuthScopesWorld(@Req() request: Express.Request, @Res() response: Express.Response) {
         AuthControllerUtils.handleAuthentication(request, response);
-        return {text: "Hello world"};
+        return {text: "hello world with scopes"};
+    }
+
+    @Get("/hello-auth-world-no-scope")
+    @OAuthBearer()
+    helloAuthNoScopesWorld(@Req() request: Express.Request, @Res() response: Express.Response) {
+        AuthControllerUtils.handleAuthentication(request, response);
+        return {text: "hello world auth but no scopes"};
     }
 
     @Get("/hello-no-auth-world")
-    helloWorld(@Req() request: Express.Request, @Res() response: Express.Response) {
+    helloNoAuthWorld(@Req() request: Express.Request, @Res() response: Express.Response) {
         AuthControllerUtils.handleAuthentication(request, response);
         return {text: "hello world with no authorisation"};
     }

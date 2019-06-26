@@ -1,13 +1,14 @@
 <div class="flex-container">
     <div class="board flex-item">
-        <form [formGroup]="form" (ngSubmit)="save()">
+        <form [formGroup]="form">
             <div class="line">
                 <label for="text-input">Input</label>
                 <input type="text" [formControl]="textInput" placeholder="" id="text-input" />
             </div>
             <div class="button">
-                <button type="submit" id="submit">Hello Auth World</button>
-                <button type="button" id="auth" [formControl]="authButton" (click)="authCall($event);">Hello No Auth World</button>
+                <button type="submit" id="authWithScope" [formControl]="authButtonWithScopes" (click)="authCall($event)">Hello Auth World with scope</button>
+                <button type="button" id="authButNoScope" [formControl]="authButtonNoScopes" (click)="authCallNoScope($event);">Hello Auth World without scope</button>
+                <button type="button" id="noAuth" [formControl]="noAuthButton" (click)="noAuthCall($event);">Hello No Auth World</button>
             </div>
             <textarea [formControl]="output" rows="3" style="width:100%;"></textarea>
         </form>

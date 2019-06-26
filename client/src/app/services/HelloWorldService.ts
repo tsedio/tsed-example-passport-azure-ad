@@ -7,6 +7,7 @@ import {HttpClientService} from "./core/azureAd/HttpClientService";
 
 const SERVER_URL = "http://localhost:8070";
 const HELLO_AUTH = "/rest/hello-auth-world";
+const HELLO_AUTH_NO_SCOPE = "/rest/hello-auth-world-no-scope";
 const HELLO_NO_AUTH = "/rest/hello-no-auth-world";
 
 const SCOPE_BASE = "api://translationeditor-test";
@@ -32,6 +33,19 @@ export class HelloWorldService {
     async helloAuthWorld(): Promise<any> {
         return new Promise<any>(async (resolve, reject) => {
             this.httpClientService.get(SERVER_URL + HELLO_AUTH, {scopesApplied: true})
+                .subscribe((value: any) => {
+                    console.log(`SERVER_URL + HELLO get: ${JSON.stringify(value)}`);
+                    return resolve(value);
+                }, (error) => {
+                    this.handleError(error, "helloWorld");
+                    reject(error);
+                });
+        });
+    }
+
+    async helloAuthWorldNoScope(): Promise<any> {
+        return new Promise<any>(async (resolve, reject) => {
+            this.httpClientService.get(SERVER_URL + HELLO_AUTH_NO_SCOPE, {scopesApplied: true})
                 .subscribe((value: any) => {
                     console.log(`SERVER_URL + HELLO get: ${JSON.stringify(value)}`);
                     return resolve(value);
