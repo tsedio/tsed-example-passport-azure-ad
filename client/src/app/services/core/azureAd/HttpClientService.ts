@@ -44,9 +44,10 @@ export class HttpClientService {
             "Access-Control-Allow-Origin": this.server
         };
         // return of(headers);
+        console.log(`httpOptions - given scopes before: ${JSON.stringify(options.scopes)}`);
         options.scopes = this.authService.getScopesOrDefault(options.scopes);
         options.scopes = options.scopes.map(ADD_SCOPE_BASE);
-        console.log(`httpOptions - given scopes: ${JSON.stringify(options.scopes)}`);
+        console.log(`httpOptions - given scopes after: ${JSON.stringify(options.scopes)}`);
         // if (! (options.scopes && options.scopes.length > 0)) {
         //     options.scopes = ["user.read"]; // api://translationeditor-test/.default"]; // offline_access api://translationeditor-test/default openid user.read, api://translationeditor-test/tester"];
         // }

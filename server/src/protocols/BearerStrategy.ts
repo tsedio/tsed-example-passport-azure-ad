@@ -30,15 +30,16 @@ registerFactory({
                 // check precondition and authenticate user by their token and given options
                 const user = await authService.verify(token, options)
                     .catch(error => {
+                        console.log(`authService verify catch`)
                         return done(error);
                     });
 
                 if (!user) {
                     authService.add(token);
-                    console.log("BearerStrategy - New user added automatically: ", token.oid);
+                    console.log("BearerStrategy - user: ", JSON.stringify(token));
                     return done(null, token);
                 }
-                console.log("BearerStrategy - Found user: ", JSON.stringify(token));
+                console.log("BearerStrategy - user: ", JSON.stringify(token));
                 return done(null, user, token);
             } catch (error) {
                 return done(error);

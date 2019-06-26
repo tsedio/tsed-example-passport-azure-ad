@@ -12,8 +12,8 @@ require("dotenv").config();
  */
 @Service()
 export class AuthService {
-    users = [];
     owner = null;
+    scopes = process.env.Scopes ? process.env.Scopes.split(",") : [];
 
     static getClientId(): string {
         return process.env.clientId;
@@ -24,42 +24,42 @@ export class AuthService {
     }
 
     add(token: ITokenPayload) {
-        this.users.push(token);
         this.owner = token.oid;
     }
 
     async verify(token: ITokenPayload, options: any): Promise<User> {
-        if (token.tid !== AuthService.getTenantId()) {
-            throw Error("TenantId is not the same");
-        }
-        if (token.aud !== AuthService.getClientId()) {
-            throw Error("ClientId is not the same");
-        }
-        return this.verifyUser(token, options);
-    }
-
-    private async verifyUser(token: ITokenPayload, options: any): Promise<User> {
         return new Promise((resolve, reject) => {
 
-            const findById = (id, fn) => {
-                for (let i = 0, len = this.users.length; i < len; i++) {
-                    const user = this.users[i];
-                    if (user.oid === id) {
-                        console.log("Auth - Found user: ", user);
-                        return fn(null, user);
-                    }
-                }
-                return fn(null, null);
-            };
-
-            console.log(`Auth - Verify user - token: ${JSON.stringify(token)}`);
-            findById(token.oid, (err, user) => {
-                if (err) {
-                    return reject(err);
-                }
-                this.owner = token.oid;
-                resolve(user);
-            });
+            if (token.tid !== AuthService.getTenantId()) {
+                throw Error("TenantId is not the same");
+            }
+            if (token.aud !== AuthService.getClientId()) {
+                throw Error("ClientId is not the same");
+            }
+            if (!(options && options.scopes && options.scopes.length > 0 && this.tokenInGivenOrApplicationScope(token.scp, options.scopes))) {
+                const epScope = options && options.scopes && options.scopes.length > 0 ? options.scopes[0] : "null";
+                const msg = `Scopes on endpoint: ${epScope} not same as in token: ${token.scp}`;
+                console.error(msg);
+                reject(msg);
+            }
+            return resolve(token);
         });
-    };
+    }
+
+    /**
+     * The scope passed in the bearer token should be confirmed as the one on the endpoint.  It also needs to allow
+     * for the preflight HEAD requests that will use the application scope that all users must have.  It should be
+     * the first scope listed in the environment variable 'Scopes', and these are available in this.scopes.
+     *
+     * @param tokensScope that comes in the bearer token and should have come from the
+     *          \@OAuthBearer({scopes: [<token>, ..]}) on endpoint. It will be undefined if env.UseScopeLevelAuth
+     *          is false.
+     * @param endpointScopes are the scopes that came from the @OAuthBearer({scopes:[<tokens>, ..]}
+     */
+    private tokenInGivenOrApplicationScope(tokensScope: string, endpointScopes: string[]): boolean {
+        let allScopes = endpointScopes.slice();
+        allScopes.push(this.scopes[0]);
+
+        return ! tokensScope || allScopes.find(t => t === tokensScope) !== undefined;
+    }
 }
