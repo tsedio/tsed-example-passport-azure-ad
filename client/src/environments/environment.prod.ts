@@ -6,7 +6,7 @@ export const environment = {
     UseScopeLevelAuth: false,
     // If using endpoint-specific auth then all users will need to have the following Scope.
     // App Registrations > Expose API, API Permissions. Required as Azure seems to need at least one scope.
-    ApplicationExecScope: "Insert here from Azure App Registration",
+    ApplicationScope: "Insert here from Azure App Registration",
     // And need to define AzureIdentifierUri to form the fully qualified Scope name.
     // App Registrations > Manifest
     AzureIdentifierUri: "Insert here from Azure App Registration",

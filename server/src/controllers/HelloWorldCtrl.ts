@@ -1,4 +1,4 @@
-import {Controller, Get, Head, Req, Res} from "@tsed/common";
+import {BodyParams, Controller, Get, Head, Post, Req, Res} from "@tsed/common";
 import {OAuthBearer} from "../decorators/OAuthBearer";
 import * as Express from "express";
 import {AuthControllerUtils} from "./core/AuthControllerUtils";
@@ -24,5 +24,43 @@ export class HelloWorldCtrl {
     helloNoAuthWorld(@Req() request: Express.Request, @Res() response: Express.Response) {
         AuthControllerUtils.handleAuthentication(request, response);
         return {text: "hello world with no authorisation"};
+    }
+
+    @Head("/post-auth-scoped")
+    @OAuthBearer({scopes: ["tester"]})
+    postAuthHead(@Req() request: Express.Request, @Res() response: Express.Response) {
+        AuthControllerUtils.handleAuthentication(request, response);
+    }
+
+    @Post("/post-auth-scoped")
+    postAuth(@Req() request: Express.Request, @Res() response: Express.Response
+        , @BodyParams() message: any) {
+        AuthControllerUtils.handleAuthentication(request, response);
+        return {text: "Auth w Scopes: " + message.text};
+    }
+
+    @Head("/post-auth-not-scoped")
+    @OAuthBearer()
+    postAuthNotScopedHead(@Req() request: Express.Request, @Res() response: Express.Response) {
+        AuthControllerUtils.handleAuthentication(request, response);
+    }
+
+    @Post("/post-auth-not-scoped")
+    postAuthNotScoped(@Req() request: Express.Request, @Res() response: Express.Response
+        , @BodyParams() message: any) {
+        AuthControllerUtils.handleAuthentication(request, response);
+        return {text: "Auth wout Scopes: " + message.text};
+    }
+
+    @Head("/post-no-auth")
+    postNoAuthHead(@Req() request: Express.Request, @Res() response: Express.Response) {
+        AuthControllerUtils.handleAuthentication(request, response);
+    }
+
+    @Post("/post-no-auth")
+    postNoAuth(@Req() request: Express.Request, @Res() response: Express.Response
+        , @BodyParams() message: any) {
+        AuthControllerUtils.handleAuthentication(request, response);
+        return {text: "No Auth: " + message.text};
     }
 }

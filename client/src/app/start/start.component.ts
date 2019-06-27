@@ -7,6 +7,8 @@ import {ToasterService} from "angular2-toaster";
 import {AuthService} from "../services/core/azureAd/AuthService";
 import {HelloWorldService} from "../services/HelloWorldService";
 
+const POST_MSG = {text: "I'm posting this, maybe to Auth, which might be scoped, maybe not!"};
+
 @Component({
     selector: "app-start",
     templateUrl: "./start.component.html",
@@ -19,12 +21,18 @@ export class StartComponent implements OnInit {
     authButtonWithScopes = new FormControl("");
     authButtonNoScopes = new FormControl("");
     noAuthButton = new FormControl("");
+    postAuthButtonWithScopes = new FormControl("");
+    postAuthButtonNoScopes = new FormControl("");
+    postNoAuthButton = new FormControl("");
     form = new FormGroup({
         textInput: this.textInput,
         output: this.output,
         authButtonWithScopes: this.authButtonWithScopes,
         authButtonNoScopes: this.authButtonNoScopes,
-        noAuthButton: this.noAuthButton
+        noAuthButton: this.noAuthButton,
+        PostAuthButtonWithScopes: this.postAuthButtonWithScopes,
+        PostAuthButtonNoScopes: this.postAuthButtonNoScopes,
+        PostNoAuthButton: this.postNoAuthButton
     });
 
     constructor(private http: HttpClient, protected spinnerService: Ng4LoadingSpinnerService, private toast: ToasterService,
@@ -58,8 +66,28 @@ export class StartComponent implements OnInit {
         // event.stopPropagation()
     }
 
-    async noAuthCall() {
+    async noAuthCall(event) {
         const hello = await this.helloWorldService.helloNoAuthWorld();
+        console.log(`helloAuth - from server: ${hello}`);
+        this.output.setValue(JSON.stringify(hello));
+    }
+
+    async postAuthCall(event) {
+        const hello = await this.helloWorldService.postAuthCallScoped(POST_MSG);
+        console.log(`helloNoAuth - from server: ${hello}`);
+        this.output.setValue(JSON.stringify(hello));
+        // event.stopPropagation()
+    }
+
+    async postAuthCallNoScope(event) {
+        const hello = await this.helloWorldService.postAuthCallNoScope(POST_MSG);
+        console.log(`helloNoAuth - from server: ${hello}`);
+        this.output.setValue(JSON.stringify(hello));
+        // event.stopPropagation()
+    }
+
+    async postNoAuthCall(event) {
+        const hello = await this.helloWorldService.postNoAuthCall(POST_MSG);
         console.log(`helloAuth - from server: ${hello}`);
         this.output.setValue(JSON.stringify(hello));
     }

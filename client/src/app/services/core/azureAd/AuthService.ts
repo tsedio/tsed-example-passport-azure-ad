@@ -1,7 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Logger, LogLevel, UserAgentApplication} from "msal";
 import {ToasterService} from "angular2-toaster";
-import {HttpClient} from "@angular/common/http";
 import {AuthenticationParameters} from "msal/src/AuthenticationParameters";
 import {environment} from "../../../../environments/environment";
 
@@ -30,10 +29,10 @@ export class AuthService {
     idToken;
     clientId = environment.clientId;
     tenantId = environment.tenantId;
-    applicationExecScope = environment.ApplicationExecScope;
+    applicationScope = environment.ApplicationScope;
 
     constructor(private toast: ToasterService) {
-        if (!this.applicationExecScope) {
+        if (!this.applicationScope) {
             throw new Error(`Expecting environment.ApplicationExecScope to be set`);
         }
     }
@@ -157,7 +156,7 @@ export class AuthService {
      */
     getScopesOrDefault(scope: string[]): string[] {
         if (!scope || scope.length === 0) {
-            return [this.applicationExecScope];
+            return [this.applicationScope];
         }
         return scope;
     }
