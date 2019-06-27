@@ -35,7 +35,6 @@ export class HelloWorldCtrl {
     @Post("/post-auth-scoped")
     postAuth(@Req() request: Express.Request, @Res() response: Express.Response
         , @BodyParams() message: any) {
-        AuthControllerUtils.handleAuthentication(request, response);
         return {text: "Auth w Scopes: " + message.text};
     }
 
@@ -48,7 +47,6 @@ export class HelloWorldCtrl {
     @Post("/post-auth-not-scoped")
     postAuthNotScoped(@Req() request: Express.Request, @Res() response: Express.Response
         , @BodyParams() message: any) {
-        AuthControllerUtils.handleAuthentication(request, response);
         return {text: "Auth wout Scopes: " + message.text};
     }
 
@@ -60,7 +58,6 @@ export class HelloWorldCtrl {
     @Post("/post-no-auth")
     postNoAuth(@Req() request: Express.Request, @Res() response: Express.Response
         , @BodyParams() message: any) {
-        AuthControllerUtils.handleAuthentication(request, response);
         return {text: "No Auth: " + message.text};
     }
 }

@@ -123,11 +123,13 @@ export class HttpClientService {
      * except that it means an unnecessary light-weight call is made to the backend.  If there is a scope and
      * this preflight step is not taken then a 401 unauthorised will be thrown.
      * @returns an observable the same as for httpClient.Get().  Subscribe to it.
+     *
+     * For Authentication to work, a separate HEAD at same endpoint as the POST needs to exist.
      */
     post<T>(URL: string, body: any, options?: { scopesApplied: boolean }): Observable<HttpEvent<T>> {
         // First call the HEAD of same endpoint to retrieve the scopes attached to it (eg. the roles users must have)
         // Azure login with that (Dynamic) scope
-        // And then call the actual GET with that scope
+        // And then call the actual POST with that scope
         if (options && options.scopesApplied) {
             return this.httpOptions()
                 .pipe(
