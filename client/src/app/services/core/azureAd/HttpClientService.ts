@@ -118,6 +118,8 @@ export class HttpClientService {
     /**
      * Perform an HTTPClient POST but with authentication against scopes specified on the REST endpoint this hits
      * @param URL
+     * @param body
+     * @param options
      * @options - scopesApplied - perform 'preflight' request to get the scopes applied to the endpoint that the user
      * must 'have' in order for them to be authorised.  It doesn't matter if there are no scopes on the endpoint
      * except that it means an unnecessary light-weight call is made to the backend.  If there is a scope and

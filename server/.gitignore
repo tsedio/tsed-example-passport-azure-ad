@@ -31,9 +31,19 @@ node_modules
 .npmrc
 *.log
 
+# Typings
+typings/
+
+# Typescript
+src/**/*.js
+src/**/*.js.map
+test/{integration,unit,helpers}/**/*.js
+test/{integration,unit,helpers}/**/*.js.map
+
 # Test
 /coverage
-/dist
+/stdout
+/stderr
 /.tmp
 /.nyc_output/
 

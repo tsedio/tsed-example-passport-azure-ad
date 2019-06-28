@@ -1,63 +1,63 @@
-import {BodyParams, Controller, Get, Head, Post, Req, Res} from "@tsed/common";
+import {$log, BodyParams, Controller, Get, Head, Post} from "@tsed/common";
 import {OAuthBearer} from "../decorators/OAuthBearer";
-import * as Express from "express";
-import {AuthControllerUtils} from "./core/AuthControllerUtils";
+import {OAuthParams} from "../decorators/OAuthParams";
+import {OAuthHead} from "../decorators/OAuthHead";
 
 @Controller("/rest")
 export class HelloWorldCtrl {
 
-    @Get("/hello-auth-world")
-    @OAuthBearer({"scopes": ["tester"]})
-    helloAuthScopesWorld(@Req() request: Express.Request, @Res() response: Express.Response) {
-        AuthControllerUtils.handleAuthentication(request, response);
-        return {text: "hello world with scopes"};
-    }
+  @Get("/hello-auth-world")
+  @OAuthBearer({"scopes": ["tester"]})
+  helloAuthScopesWorld(@OAuthParams("scopes") scopes: string[]) {
 
-    @Get("/hello-auth-world-no-scope")
-    @OAuthBearer()
-    helloAuthNoScopesWorld(@Req() request: Express.Request, @Res() response: Express.Response) {
-        AuthControllerUtils.handleAuthentication(request, response);
-        return {text: "hello world auth but no scopes"};
-    }
+    $log.info({event: "helloAuthScopesWorld", scopes});
 
-    @Get("/hello-no-auth-world")
-    helloNoAuthWorld(@Req() request: Express.Request, @Res() response: Express.Response) {
-        AuthControllerUtils.handleAuthentication(request, response);
-        return {text: "hello world with no authorisation"};
-    }
+    return {text: "hello world with scopes"};
+  }
 
-    @Head("/post-auth-scoped")
-    @OAuthBearer({scopes: ["tester"]})
-    postAuthHead(@Req() request: Express.Request, @Res() response: Express.Response) {
-        AuthControllerUtils.handleAuthentication(request, response);
-    }
+  @Get("/hello-auth-world-no-scope")
+  @OAuthBearer()
+  helloAuthNoScopesWorld(@OAuthParams("scopes") scopes: string[]) {
 
-    @Post("/post-auth-scoped")
-    postAuth(@Req() request: Express.Request, @Res() response: Express.Response
-        , @BodyParams() message: any) {
-        return {text: "Auth w Scopes: " + message.text};
-    }
+    $log.info({event: "helloAuthNoScopesWorld", scopes});
 
-    @Head("/post-auth-not-scoped")
-    @OAuthBearer()
-    postAuthNotScopedHead(@Req() request: Express.Request, @Res() response: Express.Response) {
-        AuthControllerUtils.handleAuthentication(request, response);
-    }
+    return {text: "hello world auth but no scopes"};
+  }
 
-    @Post("/post-auth-not-scoped")
-    postAuthNotScoped(@Req() request: Express.Request, @Res() response: Express.Response
-        , @BodyParams() message: any) {
-        return {text: "Auth wout Scopes: " + message.text};
-    }
+  @Get("/hello-no-auth-world")
+  helloNoAuthWorld(@OAuthParams("scopes") scopes: string[]) {
 
-    @Head("/post-no-auth")
-    postNoAuthHead(@Req() request: Express.Request, @Res() response: Express.Response) {
-        AuthControllerUtils.handleAuthentication(request, response);
-    }
+    $log.info({event: "helloNoAuthWorld", scopes});
 
-    @Post("/post-no-auth")
-    postNoAuth(@Req() request: Express.Request, @Res() response: Express.Response
-        , @BodyParams() message: any) {
-        return {text: "No Auth: " + message.text};
-    }
+    return {text: "hello world with no authorisation"};
+  }
+
+  @Head("/post-auth-scoped")
+  @Post("/post-auth-scoped")
+  @OAuthBearer({scopes: ["tester"]})
+  postAuthScoped(@OAuthParams("scopes") scopes: string[], @BodyParams() message: any) {
+
+    $log.info({event: "postAuthScoped", scopes});
+
+    return {text: "Auth w Scopes: " + message.text};
+  }
+
+  @Head("/post-auth-not-scoped")
+  @Post("/post-auth-not-scoped")
+  @OAuthBearer()
+  postAuthNotScopedHead(@OAuthParams("scopes") scopes: string[], @BodyParams() message: any) {
+
+    $log.info({event: "postAuthNotScopedHead", scopes});
+
+    return {text: "Auth wout Scopes: " + message.text};
+  }
+
+  @OAuthHead()
+  @Post("/post-no-auth")
+  postNoAuth(@OAuthParams("scopes") scopes: string[], @BodyParams() message: any) {
+
+    $log.info({event: "postNoAuth", scopes});
+
+    return {text: "No Auth: " + message.text};
+  }
 }
