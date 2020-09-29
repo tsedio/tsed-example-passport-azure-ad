@@ -1,7 +1,7 @@
-import {Unauthorized} from "ts-httpexceptions";
+import {Unauthorized} from "@tsed/exceptions";
 
 export class ClientIdError extends Unauthorized {
   constructor() {
-    super("CliendId mismatch")
+    super("CliendId mismatch");
   }
 }
