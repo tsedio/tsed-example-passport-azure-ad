@@ -37,16 +37,21 @@ typings/
 # Typescript
 src/**/*.js
 src/**/*.js.map
-test/{integration,unit,helpers}/**/*.js
-test/{integration,unit,helpers}/**/*.js.map
+test/**/*.js
+test/**/*.js.map
 
 # Test
-/coverage
-/stdout
-/stderr
 /.tmp
-/.nyc_output/
+/.nyc_output
 
 # IDE
 .vscode
 .idea
+
+# Project
+/public
+/dist
+
+#env
+.env.local
+.env.development

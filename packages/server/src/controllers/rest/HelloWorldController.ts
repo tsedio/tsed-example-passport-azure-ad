@@ -1,7 +1,7 @@
 import {$log, BodyParams, Controller, Get, Head, Post} from "@tsed/common";
-import {OAuthBearer} from "../decorators/OAuthBearer";
-import {OAuthParams} from "../decorators/OAuthParams";
-import {OAuthHead} from "../decorators/OAuthHead";
+import {OAuthBearer} from "../../decorators/OAuthBearer";
+import {OAuthParams} from "../../decorators/OAuthParams";
+import {OAuthHead} from "../../decorators/OAuthHead";
 
 @Controller("/rest")
 export class HelloWorldCtrl {

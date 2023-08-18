@@ -1,6 +1,6 @@
-import {Service} from "@tsed/di";
+import {Constant, Injectable, InjectContext} from "@tsed/di";
 import {ITokenPayload} from "passport-azure-ad";
-import {$log} from "@tsed/common";
+import {Context} from "@tsed/common";
 import {TenantIdError} from "./errors/TenantIdError";
 import {ClientIdError} from "./errors/ClientIdError";
 import {InsufficientScopePermissions} from "./errors/InsufficientScopePermissions";
@@ -12,32 +12,44 @@ require("dotenv").config();
  * happens here is only to provide functional benefits to the application.  The Azure auth happens in the
  * protocols / BearerStrategy class for passport-azure-ad.
  */
-@Service()
+@Injectable()
 export class AuthService {
-  owner = null;
-  scopes = process.env.Scopes ? process.env.Scopes.split(",") : [];
+  @InjectContext()
+  protected $ctx: Context;
 
-  static getClientId(): string {
-    return process.env.clientId;
-  }
+  @Constant("passport.protocols.azure-bearer.settings")
+  private settings: {
+    scopes: string[],
+    identityMetadata: string;
+    clientID: string;
+    validateIssuer: any;
+    audience: string;
+    loggingLevel: string;
+    loggingNoPII: boolean;
+    tenantId: string;
+    useScopeLevelAuth: boolean;
+  };
 
-  static getTenantId(): string {
-    return process.env.tenantId;
-  }
+  #owner: string | null = null;
 
   add(token: ITokenPayload) {
-    this.owner = token.oid;
+    this.#owner = token.oid!;
   }
 
-  verify(token: ITokenPayload, options: any): ITokenPayload {
-    if (token.tid !== AuthService.getTenantId()) {
+  verifyToken(token: ITokenPayload, options: { scopes?: string[] }): ITokenPayload {
+    if (token.tid !== this.settings.tenantId) {
       throw new TenantIdError();
     }
-    if (token.aud !== AuthService.getClientId()) {
+
+    if (token.aud !== this.settings.clientID) {
       throw new ClientIdError();
     }
 
-    $log.info({event: "verify", options, UseScopeLevelAuth: process.env.UseScopeLevelAuth});
+    this.$ctx.logger.info({
+      event: "VERIFY_TOKEN",
+      options,
+      useScopeLevelAuth: this.settings.useScopeLevelAuth
+    });
 
     const {scopes} = options;
 
@@ -46,11 +58,12 @@ export class AuthService {
       return token;
     }
 
-    if (!(scopes && scopes.length && this.tokenInGivenOrApplicationScope(token.scp, scopes))) {
-      const requiredScope = scopes.length ? options.scopes[0] : null;
+    if (!(scopes && scopes.length && token.scp && this.tokenInGivenOrApplicationScope(token.scp, scopes))) {
+      const requiredScope = scopes.length ? scopes[0] : null;
 
-      throw new InsufficientScopePermissions(requiredScope, token.scp);
+      throw new InsufficientScopePermissions(requiredScope, token.scp!);
     }
+
 
     return token;
   }
@@ -67,7 +80,7 @@ export class AuthService {
    */
   private tokenInGivenOrApplicationScope(tokensScope: string, endpointScopes: string[]): boolean {
     let allScopes = endpointScopes.slice();
-    allScopes.push(this.scopes[0]);
+    allScopes.push(this.settings.scopes[0]);
 
     return !tokensScope || allScopes.find(t => t === tokensScope) !== undefined;
   }

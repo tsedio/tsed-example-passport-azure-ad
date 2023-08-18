@@ -7,9 +7,6 @@
   "license": "ISC",
   "private": true,
   "scripts": {
-    "postinstall": "lerna bootstrap",
-    "bootstrap": "lerna bootstrap",
-    "bootstrap:production": "lerna bootstrap -- --production",
     "test": "lerna run test --stream",
     "test:e2e": "lerna run test:e2e",
     "test:client": "lerna run test --scope=@project/client",
@@ -23,42 +20,20 @@
     "start:client": "lerna run start --scope=@project/client --stream",
     "start:server": "lerna run start --scope=@project/server --stream",
     "start:prod": "cross-env NODE_ENV=production pm2-docker --raw processes.config.js --no-deamon",
-    "docker:build": "yarn build && docker-compose build"
+    "docker:build": "yarn build && docker-compose build",
+    "prepare": "is-ci || husky install"
   },
   "dependencies": {
-    "lerna": "3.22.1",
-    "pm2": "4.1.2"
+    "lerna": "7.1.5",
+    "pm2": "5.3.0"
   },
   "devDependencies": {
-    "husky": "4.3.0",
-    "lint-staged": "10.4.0",
-    "cross-env": "7.0.2"
+    "husky": "^8.0.3",
+    "is-ci": "^3.0.1",
+    "lint-staged": "^14.0.0",
+    "prettier": "^3.0.2"
   },
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ],
-    "nohoist": [
-      "**/@types",
-      "**/@types/**",
-      "**/@tsed",
-      "**/@tsed/**"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "post-commit": "git update-index --again"
-    }
-  },
-  "lint-staged": {
-    "packages/client/**/*.{ts}": [
-      "cd packages/client && yarn lint:fix",
-      "git add"
-    ],
-    "packages/server/**/*.{ts}": [
-      "cd packages/server && yarn lint:fix",
-      "git add"
-    ]
-  }
+  "workspaces": [
+    "packages/*"
+  ]
 }
